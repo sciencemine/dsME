@@ -1,5 +1,5 @@
 {
-  "name": "model-editor",
+  "name": "dsME",
   "dependencies": {
     "vis": "^4.16.0"
   }

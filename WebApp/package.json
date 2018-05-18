@@ -1,7 +1,7 @@
 {
-  "name": "model-editor",
+  "name": "dsME",
   "version": "0.0.0",
-  "description": "Small description for model-editor goes here",
+  "description": "Small description for dsME goes here",
   "license": "MIT",
   "author": "",
   "directories": {
