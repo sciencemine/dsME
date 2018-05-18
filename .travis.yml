@@ -1,0 +1,17 @@
+---
+sudo: true
+dist: trusty
+
+language: node_js
+node_js:
+  - "6"
+
+env:
+  - TEST_DIR=WebApp
+
+allowed_failures:
+  - env: EMBER_VERSION=beta
+  - env: EMBER_VERSION=canary
+
+script: cd $TEST_DIR && npm install -g bower phantomjs-prebuilt && npm install && bower install && npm test
+
