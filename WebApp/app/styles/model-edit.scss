@@ -1,0 +1,106 @@
+.model-edit {
+    $attribute-panel-max-width: 10vw;
+    $properties-panel-max-width: 5vw;
+    $config-panel-max-height: 10vh;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #aaa;
+    display: grid;
+    grid-template-columns: [attribute-panel] fit-content($attribute-panel-max-width) [attribute-tab] auto [center] 1fr [properties-tab] auto [properties-panel] fit-content($properties-panel-max-width);
+    grid-template-rows: [title] fit-content(10vh) [center] 1fr [config-tab] auto [config-panel] fit-content($config-panel-max-height);
+
+    .title {
+        grid-column-start: center;
+        grid-row-start: title;
+        text-align: center;
+        border-bottom: 1px solid #ccc;
+    }
+
+    @mixin tabular() {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        
+        .tab {
+            background-color: #666;
+            cursor: pointer;
+        }
+    }
+
+    .attribute-panel {
+        grid-column-start: attribute-panel;
+        grid-row-start: title;
+        grid-row-end: config-panel;
+        background-color: lightcoral;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+    }
+
+    .attribute-tab {
+        @include tabular();
+
+        grid-column-start: attribute-tab;
+        grid-row-start: title;
+        grid-row-end: config-tab;
+        
+        .tab {
+            width: 2vw;
+            border-top-right-radius: 2vw;
+            border-bottom-right-radius: 2vw;
+            height: 10vh;
+        }
+    }
+
+    .properties-panel {
+        grid-column-start: properties-panel;
+        grid-row-start: title;
+        grid-row-end: config-panel;
+        background-color: lightcoral;
+    }
+
+    .properties-tab {
+        @include tabular();
+
+        grid-column-start: properties-tab;
+        grid-row-start: title;
+        grid-row-end: config-tab;
+        
+        .tab {
+            width: 2vw;
+            border-top-left-radius: 2vw;
+            border-bottom-left-radius: 2vw;
+            height: 10vh;
+        }
+    }
+
+    .configuration-panel {
+        grid-column-start: attribute-panel;
+        grid-column-end: -1;
+        grid-row-start: config-panel;
+        grid-row-end: -1;
+        background-color: lightblue;
+    }
+
+    .config-tab {
+        @include tabular();
+
+        grid-column-start: center;
+        grid-row-start: config-tab;
+        
+        .tab {
+            width: 5vw;
+            border-top-right-radius: 2vw;
+            border-top-left-radius: 2vw;
+            height: 2vh;
+        }
+    }
+}
+
+.panel-list {
+    overflow-y: scroll;
+}

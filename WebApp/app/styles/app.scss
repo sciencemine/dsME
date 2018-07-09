@@ -1,12 +1,13 @@
 /* Route Styles */
-@import 'model-select.css';
+@import 'model-select';
+@import 'model-edit';
 
 /* Component Styles */
-@import 'properties-panel.css';
-@import 'configuration-panel.css';
-@import 'attribute-panel.css';
-@import 'content-area.css';
-@import 'graph-visualizer.css';
+@import 'properties-panel';
+@import 'configuration-panel';
+@import 'attribute-panel';
+@import 'content-area';
+@import 'graph-visualizer';
 
 /* Global Styles */
 .unselectable {
@@ -64,4 +65,8 @@
 
 .underline:hover {
   text-decoration: underline;
+}
+
+body {
+  margin: 0;
 }

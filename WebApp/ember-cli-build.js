@@ -3,14 +3,9 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
-  var app = new EmberApp(defaults, {
-    'ember-bootstrap': {
-      'bootstrapVersion': 3,
-      'importBootstrapFont': true,
-      'importBootstrapCSS': true
-    }
-  });
-  
+  var app = new EmberApp(defaults);
+
+    /*
   app.import('vendor/bootstrap/affix.js');
   app.import('vendor/bootstrap/button.js');
   app.import('vendor/bootstrap/dropdown.js');
@@ -23,6 +18,6 @@ module.exports = function(defaults) {
   app.import('vendor/bootstrap/scrollspy.js');
   app.import('vendor/bootstrap/tab.js');
   app.import('vendor/bootstrap/transition.js');
-
+*/
   return app.toTree();
 };

@@ -25,10 +25,11 @@ import Ember from 'ember';
 const { inject: { service } } = Ember;
 
 export default Ember.Component.extend({
+  classNames: [ "attribute-panel" ],
+  id: "attribute-panel",
+
   panelStates: service(),
   modelService: service(),
-  
-  classNameBindings: ['expanded:content-area--attribute-large:content-area--attribute-small'],
   
   /* Properties for the properties panel to know */
   prefix: "attributes",
@@ -36,24 +37,6 @@ export default Ember.Component.extend({
   dragX: null,
   dragY: null,
   
-  setStyle: function() {
-    let pageHeader = Ember.$("#content-area--header");
-    
-    if (pageHeader[0]) {
-      let header = this.$("#attribute-panel--header");
-      let panel = this.$("#attribute-panel");
-      let titleBottom = pageHeader.height() +
-                        pageHeader.offset().top +
-                        parseInt(pageHeader.css('paddingBottom'));
-                        
-      header.css('bottom', Ember.$(window).height() - titleBottom);
-      
-      let expanded = this.get('panelStates.attributesExpanded');
-      
-      panel.css('top', (expanded ? titleBottom : 0));
-      panel.css('height', (expanded ? Ember.$(window).height() - titleBottom : 0));
-    }
-  },
   didRender() {
     if (this.$('[data-toggle="attributeTooltip"]').length !== 0) {
       this.$('[data-toggle="attributeTooltip"]').tooltip({
@@ -65,8 +48,6 @@ export default Ember.Component.extend({
         }
       });
     }
-    
-    this.setStyle();
   },
   actions: {
     dragging(event) {
