@@ -31,6 +31,8 @@ export default Ember.Component.extend({
   /* Properties for the configuration panel to know */
   prefix: "config",
   path: ".config",
+
+  classNames: [ 'configuration-panel' ],
   
   configModelData: Ember.computed('modelService.modelData', function() {
     let newData = Ember.copy(this.get('modelService.modelData'), true);

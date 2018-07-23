@@ -1,11 +1,5 @@
 .model-select {
   background-color: #fefefe;
-
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
 }
 
 .model-select--title {
@@ -14,10 +8,8 @@
 }
 
 .model-select--panel {
-  position: absolute;
-
-  right: 20%;
-  left: 20%;
+  margin: auto;
+  width: 50%;
 }
 
 .model-select--element {
@@ -26,10 +18,4 @@
 
 .model-select--element:focus {
   outline: 0;
-}
-
-.model-select--btn__edit {
-  position: absolute;
-
-  bottom: 25px;
 }

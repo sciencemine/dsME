@@ -25,6 +25,10 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   dragX: null,
   dragY: null,
+  classNames: [ 'grab', 'attribute-list-item' ],
+
+  draggable: true,
+  attributeBindings: [ 'draggable' ],
 
   drag(event) {
     if (event.clientX !== 0 && event.clientY !== 0) {

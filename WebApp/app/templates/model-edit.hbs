@@ -1,11 +1,11 @@
 {{outlet}}
 
-<div class="model-edit">
+<div class="model-edit-container">
     <h1 class="title">Digital Signage Model Editor</h1>
-    {{attribute-panel}}
+    {{attribute-panel data=(mut virtualModel)}}
     <div class="attribute-tab"><div class="tab"></div></div>
     <div class="properties-panel">Properties</div>
     <div class="properties-tab"><div class="tab"></div></div>
-    <div class="configuration-panel">Configuration</div>
     <div class="config-tab"><div class="tab"></div></div>
+    {{configuration-panel data=(mut virtualModel)}}
 </div>

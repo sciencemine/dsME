@@ -1,29 +1,27 @@
 <div class="model-select">
-  <div class="model-select--title page-header">
+  <div class="model-select--title">
     <h1>Exhibit Selection <small>Select an exhibit to edit below</small></h1>
   </div>
-  <div class="model-select--panel panel panel-default">
+  <div class="model-select--panel">
     <div class="panel-heading">
       <h3 class="panel-title">Select an exhibit</h3>
     </div>
 
-    <ul class="list-group">
-      {{#each-in model.models as |key value|}}
+    <div class="list-group">
+      {{#each model as |value key|}}
         {{model-select-element
-          onSelectCallback=(action 'transition' value)
+          onSelectCallback=(action 'transition' value._id)
           onUpdateCallback=(action 'updateModel' value)
-          name=value.config.prettyName
-          description=value.config.description
-          showUpdate=(newer-version old=value.config.version new=modelService.modelInformation.newestVersion)
+          name=value.title
+          description=value.description
         }}
-      {{/each-in}}
+      {{/each}}
       {{model-select-element
         onSelectCallback=(action 'newExhibit')
         name="Add Exhibit"
         description="Creates a new exhibit to be added to the list"
-        showUpdate=false
       }}
-      <li class="list-group-item model-select--element unselectable cursor--default">
+      <div class="list-group-item model-select--element unselectable cursor--default">
         <h4 class="list-group-item-heading">Upload Existing Model</h4>
 
         <p class="list-group-item-text">Upload an existing model that is not listed to edit.</p>
@@ -31,7 +29,7 @@
         <form onchange={{action 'readModel'}}>
           {{input type="file" id="fileUpload" accept=".json"}}
         </form>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </div>

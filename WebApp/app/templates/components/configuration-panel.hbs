@@ -1,21 +1,56 @@
-<div id="configuration-panel" class="panel panel-primary configuration-panel">
-  <div {{action 'toggleView' on click}} class="panel-heading pointer unselectable">
-    <h4 class="panel-title">{{modelService.modelConfig.config.displayName}} <small>{{modelService.modelConfig.config.help}}<span class="pull-right">Click to {{if panelStates.configExpanded "hide" "show"}} <span class="glyphicon glyphicon-chevron-{{if panelStates.configExpanded 'down' 'up'}}" /></span></small></h4>
-  </div>
+<h4 class="panel-title">{{modelService.modelConfig.config.displayName}}</h4>
 
-  {{#if panelStates.configExpanded}}
-    <div class="panel-body">
-      {{generic-form
-        validationCallback=validationCallback
-        path=path
-        prefix=prefix
-        onSubmitCallback=onSubmitCallback
-        showTooltips=true
-        showTitle=false
-        isInline=true
-        data=configModelData
-        config=modelService.modelConfig.config
-      }}
-    </div>
-  {{/if}}
-</div>
+<form class="config-panel-form">
+  <div>
+    <label for="#modelTitle">Exhibit Title</label>
+    {{input id="modelTitle" required="required" placeholder="Title" value=data.title}}
+  </div>
+  <div>
+    <label for="#modelDescription">Exhibit Description</label>
+    {{textarea id="modelDescription" placeholder="Description" value=data.description}}
+  </div>
+  <div>
+    <label for="#modelAuthor">Original Author</label>
+    {{input id="modelAuthor" placeholder="Author" value=data.author}}
+  </div>
+  <div>
+    <label for="#idleTime">Time Btefore Going to Idle (seconds)</label>
+    {{input id="idleTime" required="required" placeholder="15" type="number" min=0 value=data.config.idle}}
+  </div>
+  <div>
+    <label for="#menuTime">Delay for Menu to Hide (seconds)</label>
+    {{input id="menuTime" required="required" placeholder="5" type="number" min=0 value=data.config.menuDwell}}
+  </div>
+  <div>
+    <label for="#popoverDelay">Delay Before Showing Popover in Menu (seconds)</label>
+    {{input id="popoverDelay" required="required" placeholder="0.2" type="number" min=0 step="0.1" value=data.config.popoverShowDelay}}
+  </div>
+  <div>
+    <label for="#popoverDwell">Time Popovers are Shown (seconds)</label>
+    {{input id="popoverDwell" required="required" placeholder="5" type="number" min=0 step="0.25" value=data.config.popoverShowDelay}}
+  </div>
+  <div>
+    <label for="#select">Select Keys (separate by space)</label>
+    {{input id="select" required="required" placeholder="w" value=data.tactile.select}}
+  </div>
+  <div>
+    <label for="#previous">Previous Keys (separate by space)</label>
+    {{input id="previous" required="required" placeholder="a" value=data.tactile.previous}}
+  </div>
+  <div>
+    <label for="#cancel">Cancel Keys (separate by space)</label>
+    {{input id="cancel" required="required" placeholder="s" value=data.tactile.cancel}}
+  </div>
+  <div>
+    <label for="#next">Next Keys (separate by space)</label>
+    {{input id="next" required="required" placeholder="d" value=data.tactile.next}}
+  </div>
+  <div>
+    <label for="#idleBackgrounds">Idle Backgrounds</label>
+    {{textarea}}
+  </div>
+  <div>
+    <label for="#videoSelectBackgroundd">Video Select Backgrounds</label>
+    {{textarea}}
+  </div>
+</form>

@@ -38,10 +38,8 @@ export default Ember.Controller.extend({
         fr.readAsText(file);
       }
     },
-    transition(data) {
-      this.get('modelService').loadModelData(data);
-      
-      this.transitionToRoute('modelEdit');
+    transition(id) {
+      this.transitionToRoute('modelEdit', id);
     },
     newExhibit() {
       let modelService = this.get('modelService');

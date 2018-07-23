@@ -11,7 +11,7 @@ Router.map(function() {
     path: "exhibit-selection"
   });
   this.route('modelEdit', {
-    path: "exhibit-editor"
+    path: "exhibit-editor/:id"
   });
 });
 

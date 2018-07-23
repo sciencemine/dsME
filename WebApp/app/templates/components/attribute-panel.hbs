@@ -6,15 +6,15 @@
   <p>List of attributes in the exhibit. Drag an attribute onto a video to add it or select the "Add Attribute" button to the right to add a new one.</p>
 </div>
 
-  <ul class="panel-list">
-    {{#each-in modelService.modelData.attributes as |key value|}}
-      {{attribute-list-item
-        attributeDropCallback=attributeDropCallback
-        deleteAttributeCallback=deleteAttributeCallback
-        updateModalCallback=(action 'editAttribute')
-        id=(create-id prefix "_" key)
-        key=key
-        data=value
-      }}
-    {{/each-in}}
-  </ul>
+<div>
+  {{#each-in modelService.modelData.attributes as |key value|}}
+    {{attribute-list-item
+      attributeDropCallback=attributeDropCallback
+      deleteAttributeCallback=deleteAttributeCallback
+      updateModalCallback=(action 'editAttribute')
+      id=(create-id prefix "_" key)
+      key=key
+      data=value
+    }}
+  {{/each-in}}
+</div>
