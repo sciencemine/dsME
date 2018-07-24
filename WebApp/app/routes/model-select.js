@@ -6,7 +6,7 @@ export default Ember.Route.extend({
   modelService: service(),
   notify: service(),
   cdnAPI: 'http://csdept26.mtech.edu:30123',
-  
+
   model() {
     return Ember.$.getJSON(`${this.cdnAPI}/dsm`)
     .then((data) => {

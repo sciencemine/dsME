@@ -7,11 +7,25 @@ export default Ember.Route.extend({
   visData: service(),
   notify: service(),
   cdnAPI: 'http://csdept26.mtech.edu:30123',
-  
+
   model(params) {
     return Ember.$.getJSON(`${this.cdnAPI}/dsm/${params.id}`)
     .then((data) => {
-      return data;
+      return Ember.RSVP.Promise.all(Object.keys(data.ce_set).map((ceID) => {
+        return Ember.$.getJSON(`${this.cdnAPI}/ce/${ceID}`)
+        .then((ce) => {
+          data.ce_set[ceID].ce = ce;
+        })
+        .catch((e) => {
+          throw e;
+        });
+      }))
+      .then(() => {
+        return data;
+      })
+      .catch((e) => {
+        this.transitionTo('model-select');
+      })
     })
     .catch(() => {
       this.transitionTo('modelSelect');

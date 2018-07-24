@@ -1,28 +1,3 @@
-.button__group {
-  z-index: 100;
-
-  margin: 3px;
-}
-
-#addRelationOverlay {
-}
-
-.video-attributes {
-  position: fixed;
-
-  width: 200px;
-
-  margin: 3px;
-}
-
-.video-attributes-scrollable {
-  max-height: 300px;
-
-  position: relative;
-
-  overflow-y: scroll;
-}
-// new
 .vis-edit-mode {
   position: absolute;
   top: 0;
@@ -36,4 +11,11 @@
 .vis-close {
   position: absolute;
   top: 0;
+}
+
+.vis-tooltip {
+  position: absolute;
+  padding: 0.25em;
+  background-color: lightgreen;
+  border-radius: 0.25em;
 }

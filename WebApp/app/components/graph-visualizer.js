@@ -15,10 +15,11 @@ export default Ember.Component.extend({
   visData: service(),
 
   classNames: [ 'graph-visualizer' ],
-  classNameBindings: [],
 
   /* The actual graph */
   network: null,
+  nodes: null,
+  edges: null,
 
   /* For adding edges */
   fromVid: null,
@@ -122,7 +123,42 @@ export default Ember.Component.extend({
       }
     }
   },
+  updateNetwork() {
+    let nodes = new vis.DataSet();
+    let edges = new vis.DataSet();
+    let dsm = this.get('data');
+
+    for (let ceID in dsm.ce_set) {
+      let ce = dsm.ce_set[ceID],
+          ceData = ce.ce;
+
+      let node = {
+        id: ceData._id,
+        title: `<h4>${ceData.title}</h4>${ceData.description}`,
+        label: this.shortenName(ceData.title)
+      };
+      nodes.add(node);
+      let ceEdges = ce.relationships.map((relationship) => {
+        let edge = {
+          to: relationship.to,
+          from: relationship.from,
+          weight: relationship.weight,
+          label: dsm.attributes[relationship.attribute].title
+        }
+      });
+      edges.add(ceEdges);
+    }
+
+    this.setProperties({
+      nodes: nodes,
+      edges: edges
+    });
+  },
+  dataObserver: Ember.observer('data', function() {
+    this.updateNetwork();
+  }),
   didInsertElement() {
+    let container = this.$()[0];
     let options = {
       autoResize: false,
       manipulation: {
@@ -158,23 +194,10 @@ export default Ember.Component.extend({
         solver: 'forceAtlas2Based'
       }
     };
-    let container = this.$()[0];
-    let nodes = new vis.DataSet([
-      {id: 1, label: 'Node 1', title: "Test"},
-      {id: 2, label: 'Node 2'},
-      {id: 3, label: 'Node 3'},
-      {id: 4, label: 'Node 4'},
-      {id: 5, label: 'Node 5'}
-    ]);
-    let edges = new vis.DataSet([
-      {from: 1, to: 3},
-      {from: 1, to: 2},
-      {from: 2, to: 4},
-      {from: 2, to: 5}
-    ]);
+    this.updateNetwork();
     let data = {
-      nodes: nodes,
-      edges: edges
+      nodes: this.get('nodes'),
+      edges: this.get('edges')
     }
     let network = new vis.Network(container, data, options);
     this.set('network', network);
