@@ -1,7 +1,10 @@
 {{outlet}}
 
 <div class="model-edit-container">
-    <h1 class="title">Digital Signage Model Editor</h1>
+    <div class="title">
+        <h1>Digital Signage Model Editor</h1>
+        <h3>{{virtualModel.title}} <small>{{virtualModel.description}}</small></h3>
+    </div>
     {{attribute-panel expanded=attributePanelExpanded data=(mut virtualModel)}}
     <div class="attribute-tab">
         <div {{action 'attributeTabClick'}} class="tab"></div>

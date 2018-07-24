@@ -68,61 +68,6 @@ export default Ember.Component.extend({
       });
     }, this);
   },
-  _init() {
-    this._super(...arguments);
-
-    let data = this.get('data');
-    let options = {
-      manipulation: { },
-      interaction: {
-        hover: true
-      },
-      nodes: {
-        size: 15,
-        borderWidth: 2,
-        shadow: true,
-        shape: "circle"
-      },
-      edges: {
-        shadow: true,
-        arrows: 'to',
-        length: 400,
-        scaling: {
-          min: 1,
-          max: 12.5,
-          label: {
-            enabled: false,
-          }
-        },
-        font: {
-          align: 'bottom',
-          size: 15
-        }
-      },
-      physics: {
-        enabled: true,
-        solver: 'forceAtlas2Based'
-      }
-    };
-    let container = this.$();
-
-    if (data) {
-      /* Creates the initial graph */
-      for (let video in data.videos) {
-        let vid = data.videos[video];
-
-        visData.createNode(video, vid.prettyName);
-
-          for (let i = 0; i < vid.relations.length; i++) {
-            let attr = data.attributes[vid.relations[i].attributeId];
-            let attrId = vid.relations[i].attributeId;
-            let diff = vid.relations[i].difficulty;
-
-            visData.createEdge(video, vid.relations[i].relatedId, diff, i, attr.prettyName, attrId);
-          }
-      }
-    }
-  },
   updateNetwork() {
     let nodes = new vis.DataSet();
     let edges = new vis.DataSet();
@@ -134,7 +79,7 @@ export default Ember.Component.extend({
 
       let node = {
         id: ceData._id,
-        title: `<h4>${ceData.title}</h4>${ceData.description}`,
+        title: `<b>${ceData.title}</b><br>${ceData.description}`,
         label: this.shortenName(ceData.title)
       };
       nodes.add(node);
