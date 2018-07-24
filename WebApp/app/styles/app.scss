@@ -4,12 +4,12 @@
 
 /* Component Styles */
 @import 'properties-panel';
-@import 'content-area';
+// @import 'content-area';
 @import 'graph-visualizer';
 
 /* Global Styles */
 .unselectable {
-  -webkit-user-select: none; /* Chrome/Safari */        
+  -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
 }

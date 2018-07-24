@@ -5,10 +5,10 @@ export default Ember.Service.extend({
   edges: null,
   nodes: null,
   options: null,
-  
+
   init() {
     this._super(...arguments);
-    
+
     let options = {
       manipulation: { },
       interaction: {
@@ -41,7 +41,7 @@ export default Ember.Service.extend({
         solver: 'forceAtlas2Based'
       }
     };
-    
+
     this.setProperties({
       edges: new vis.DataSet([ ]),
       nodes: new vis.DataSet([ ]),
@@ -59,7 +59,7 @@ export default Ember.Service.extend({
   },
   createNode(id, label, options = { }) {
     let nodeObj = Ember.merge({ id: id, label: this.shortenName(label) }, options);
-    
+
     this.loadNodes(nodeObj);
   },
   createEdge(from, to, value, pos, label, attr, options = { }) {
@@ -71,7 +71,7 @@ export default Ember.Service.extend({
       label: label,
       attr: attr
     }, options);
-    
+
     if (typeof(edgeObj.value) === "number") {
       edgeObj.color = this.createRGBColor(edgeObj.value);
       edgeObj.value = Math.abs(edgeObj.value);
@@ -79,9 +79,9 @@ export default Ember.Service.extend({
     if (typeof(edgeObj.label) === "string") {
       edgeObj.label = this.shortenName(edgeObj.label);
     }
-    
+
     edgeObj.id = edgeObj.from + "_" + edgeObj.pos + "_" + edgeObj.attr;
-    
+
     return this.loadEdges(edgeObj);
   },
   createRGBColor(diff) {

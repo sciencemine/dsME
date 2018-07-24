@@ -1,4 +1,4 @@
-<div class="btn-group button__group" role="group" aria-label="Toolbar with button grpups">
+{{!-- <div class="btn-group button__group" role="group" aria-label="Toolbar with button grpups">
 {{! Editor things}}
   {{#link-to 'modelSelect' tagName='button' type="button" class="btn btn-warning"}}
     <span class="white"><span class="glyphicon glyphicon-home"/> Exhibit Selection</span>
@@ -18,7 +18,7 @@
       <li {{action 'setPhysics' 'forceAtlas2Based'}} data-toggle="popover" title="Force Atlas 2 Based" data-content="Force Atlas 2 has been developed by <a href='http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0098679' target='_blank'>Jacomi <i>et al</i> (2014)</a> for use with Gephi. The forceAtlas2Based solver makes use of some of the equations provided by them and makes use of the barnesHut implementation in vis. The main differences are the central gravity model, which is here distance independent, and the repulsion being linear instead of quadratic. Finally, all node masses have a multiplier based on the amount of connected edges plus one."><a href="#">Force Atlas 2 Based</a></li>
     </ul>
   </div>
-  
+
 {{! Add things}}
   <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -40,11 +40,11 @@
       <li>
         {{#link-to "modelEdit" invokeAction=(action 'addEdgeMode')}}
           Relation <span class="glyphicon glyphicon-link"/>
-        {{/link-to}}        
+        {{/link-to}}
       </li>
     </ul>
   </div>
-  
+
 {{! Removing things}}
   <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,7 +54,7 @@
       <li>
         {{#link-to "modelEdit" invokeAction=(action 'deleteVideoMode')}}
           Video <span class="glyphicon glyphicon-facetime-video"/>
-        {{/link-to}}      
+        {{/link-to}}
       </li>
       <li role="separator" class="divider"></li>
       <li>
@@ -105,12 +105,12 @@
   <div class="panel-heading" {{action 'toggleVideoAttributes'}}>
     <h4>{{if videoAttributesHeading videoAttributesHeading "Hover a video"}}</h4>
   </div>
-  
+
   {{#if videoAttributesExpanded}}
     <div class="panel-body">
       Attributes on this video.
     </div>
-    
+
     {{#if videoAttributes}}
       <ul id="video-attributes-scrollable" class="list-group video-attributes-scrollable no-scrollbar" data-spy="scroll">
         {{#each-in videoAttributes as |key value|}}
@@ -119,7 +119,7 @@
               <div class="media-left">
                 <span class="media-object glyphicon {{if value.glyphicon value.glyphicon 'glyphicon-tag'}}"/>
               </div>
-              
+
               <div class="media-body">
                 <h4 class="media-heading">{{value.name}}</h4>
 
@@ -129,7 +129,7 @@
                   <i>No description available</i>
                 {{/if}}
                 <br>
-                
+
                 <button {{action 'removeAttribute' videoAttributesId value.id}} type="button" class="btn btn-danger btn-xs">Remove</button>
               </div>
             </div>
@@ -138,4 +138,10 @@
       </ul>
     {{/if}}
   {{/if}}
+</div>
+ --}}
+
+<div class="vis-network">
+  <canvas>
+  </canvas>
 </div>

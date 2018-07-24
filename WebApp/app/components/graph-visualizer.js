@@ -3,13 +3,18 @@ import vis from 'npm:vis';
 
 const { inject: { service } } = Ember;
 
+/*
+  vis needs nodes and edges to connect things.
+  i don't think i need a service to handle this.
+  the nodes are the ces. the edges are the relations in the ces.
+*/
+
 export default Ember.Component.extend({
   notify: service(),
   modelService: service(),
-  panelStates: service(),
   visData: service(),
-  
-  classNames: ['graph-area'],
+
+  classNames: [ 'graph-visualizer' ],
   classNameBindings: [],
 
   /* The actual graph */
@@ -20,16 +25,16 @@ export default Ember.Component.extend({
   toVid: null,
   relationsLength: null,
   relationsConfig: null,
-  
+
   /* Graph update data */
   addAttrToVideoData: null,
   editAttributeData: null,
-  
+
   /* Editor states */
   removeEdgeMode: false,
   removeVideoMode: false,
   usePhysics: true,
-  
+
   /* Video Attributes Information */
   videoAttributesId: null,
   videoAttributesHeading: null,
@@ -47,34 +52,13 @@ export default Ember.Component.extend({
 
     return "rgb(" + red + "," + green + "," + blue + ")";
   },
-  setStyle: function() {
-    let pageHeader = Ember.$("#content-area--header");
-    
-    if (pageHeader[0]) {
-      let panelStates = this.get('panelStates');
-      let el = Ember.$("#" + this.elementId);
-      let width = Ember.$(window).width();
-      let titleBottom = pageHeader.height() +
-                   pageHeader.offset().top +
-                   parseInt(pageHeader.css('paddingBottom'));
-      let configEl = Ember.$("#configuration-panel");
-      
-      el.css('top', titleBottom);
-      el.css('right', (panelStates.get('propertiesExpanded') ? width - Ember.$("#properties-panel").offset().left : 0));
-      el.css('left', (panelStates.get('attributesExpanded') ? Ember.$("#attribute-panel").outerWidth() : 0));
-      
-      configEl.ready(function() {
-        el.css('bottom', configEl.outerHeight());
-      });
-    }
-  },
   updateVideoAttributes: function() {
     let modelData = this.get('modelService.modelData');
     this.set('videoAttributes', [ ]);
-    
+
     modelData.videos[this.get('videoAttributesId')].attributes.forEach(function(attrId) {
       let attribute = modelData.attributes[attrId];
-      
+
       this.get('videoAttributes').pushObject({
         name: attribute.prettyName,
         description: attribute.description,
@@ -83,17 +67,49 @@ export default Ember.Component.extend({
       });
     }, this);
   },
-  init() {
+  _init() {
     this._super(...arguments);
-    
-    let data = this.get('modelService.modelData');
-    let visData = this.get('visData');
+
+    let data = this.get('data');
+    let options = {
+      manipulation: { },
+      interaction: {
+        hover: true
+      },
+      nodes: {
+        size: 15,
+        borderWidth: 2,
+        shadow: true,
+        shape: "circle"
+      },
+      edges: {
+        shadow: true,
+        arrows: 'to',
+        length: 400,
+        scaling: {
+          min: 1,
+          max: 12.5,
+          label: {
+            enabled: false,
+          }
+        },
+        font: {
+          align: 'bottom',
+          size: 15
+        }
+      },
+      physics: {
+        enabled: true,
+        solver: 'forceAtlas2Based'
+      }
+    };
+    let container = this.$();
 
     if (data) {
       /* Creates the initial graph */
       for (let video in data.videos) {
         let vid = data.videos[video];
-        
+
         visData.createNode(video, vid.prettyName);
 
           for (let i = 0; i < vid.relations.length; i++) {
@@ -106,11 +122,78 @@ export default Ember.Component.extend({
       }
     }
   },
+  didInsertElement() {
+    let options = {
+      autoResize: false,
+      manipulation: {
+        enabled: true
+      },
+      interaction: {
+        hover: true
+      },
+      nodes: {
+        size: 15,
+        borderWidth: 2,
+        shadow: true,
+        shape: "circle"
+      },
+      edges: {
+        shadow: true,
+        arrows: 'to',
+        length: 400,
+        scaling: {
+          min: 1,
+          max: 12.5,
+          label: {
+            enabled: false,
+          }
+        },
+        font: {
+          align: 'bottom',
+          size: 15
+        }
+      },
+      physics: {
+        enabled: true,
+        solver: 'forceAtlas2Based'
+      }
+    };
+    let container = this.$()[0];
+    let nodes = new vis.DataSet([
+      {id: 1, label: 'Node 1', title: "Test"},
+      {id: 2, label: 'Node 2'},
+      {id: 3, label: 'Node 3'},
+      {id: 4, label: 'Node 4'},
+      {id: 5, label: 'Node 5'}
+    ]);
+    let edges = new vis.DataSet([
+      {from: 1, to: 3},
+      {from: 1, to: 2},
+      {from: 2, to: 4},
+      {from: 2, to: 5}
+    ]);
+    let data = {
+      nodes: nodes,
+      edges: edges
+    }
+    let network = new vis.Network(container, data, options);
+    this.set('network', network);
+  },
   didRender() {
+    let network = this.get('network');
+    // set network to small fist. this is necessary.
+    network.setSize(1, 1);
+    // now get the width and height we need to adjust to
+    let el = this.$()[0];
+    network.setSize(el.clientWidth, el.clientHeight);
+    // finally, fit the graph onto the screen
+    network.fit();
+  },
+  _didRender() {
     if (this.get('network') === null) {
       this.send('drawGraph');
     }
-    
+
     let popovers = this.$('[data-toggle="popover"]');
 
     if (popovers.length !== 0) {
@@ -127,16 +210,13 @@ export default Ember.Component.extend({
   },
   addAttributeObserver: Ember.observer('addAttrToVideoData', function() {
     let addAttrData = this.get('addAttrToVideoData');
-    
+
     if (addAttrData) {
       let network = this.get('network');
       let domPos = addAttrData.domPos;
-      
+
       this.get('getVideoCallback') (network.getNodeAt(domPos), addAttrData.attributeId);
     }
-  }),
-  panelObservers: Ember.observer('panelStates.attributesExpanded', 'panelStates.propertiesExpanded', 'panelStates.configExpanded', function() {
-    this.setStyle();
   }),
   actions: {
     addEdgeMode() {
@@ -155,27 +235,25 @@ export default Ember.Component.extend({
       let modelService = this.get('modelService');
       let data = modelService.get('modelData');
       let visData = this.get('visData');
-      
+
       if (confirm("Are you sure that you want to remove " +
           data.attributes[attributeId].prettyName + " from " +
           data.videos[videoId].prettyName + "? This will remove all" +
           " relations this video has. (Cancel for no)")) {
-        
+
         visData.get('edges').forEach(function (edge) {
           if ((edge.from === videoId || edge.to === videoId) && edge.attr === attributeId) {
             visData.removeEdge(edge);
           }
         });
-        
+
         modelService.remove('modelData.videos.' + videoId + '.attributes', attributeId);
         modelService.remove('modelData.attributes.' + attributeId +  '.videos', videoId);
-        
+
         this.updateVideoAttributes();
       }
     },
     drawGraph() {
-      this.setStyle();
-      
       let container = this.$('.graph-container')[0];
       let component = this;
       let modelData = this.get('modelService.modelData');
@@ -189,13 +267,13 @@ export default Ember.Component.extend({
         component.set('fromVid', data.from);
         component.set('toVid', data.to);
         component.set('relationsLength', fromVid.relations.length);
-        
+
         if (data.from === data.to) {
           component.get('notify').warning("Warning! Trying to make a relation to the same video.", {
             radius: true,
             closeAfter: 10 * 1000
           });
-          
+
           return;
         }
 
@@ -210,13 +288,13 @@ export default Ember.Component.extend({
             attributes.push(attr);
           }
         }
-        
+
         if (attributes.length === 0) {
           component.get('notify').warning("Warning! Trying to make a relation between two videos with no shared attributes.", {
             radius: true,
             closeAfter: 10 * 1000
           });
-          
+
           return;
         }
 
@@ -237,7 +315,7 @@ export default Ember.Component.extend({
         })
         .appendTo('body').modal('show');
       });
-      
+
       let graphData = {
         nodes: visData.get('nodes'),
         edges: visData.get('edges')
@@ -253,50 +331,50 @@ export default Ember.Component.extend({
       })
       .on("hoverNode", function (param) {
         let vidData = modelData.videos[param.node];
-        
+
         component.setProperties({
           videoAttributesHeading: vidData.prettyName,
           videoAttributesId: param.node
         });
-        
+
         component.updateVideoAttributes();
       })
       .on("click", function (param) {
         if (param.edges.length === 1 && component.get('removeEdgeMode')) {
           let edges = visData.get('edges');
           let edge = edges.get(param.edges[0]);
-        
+
           if (confirm("Are you sure you want to remove the relation between \"" +
                       modelData.videos[edge.from].prettyName +
                       "\" to \"" + modelData.videos[edge.to].prettyName +
                       "\" related by \"" + modelData.attributes[edge.attr].prettyName +
                       "\"?")) {
             visData.removeEdge(edge);
-            
+
             component.set('removeEdgeMode', false);
-            
+
             component.get('modelService').removeAt('modelData.videos.' + edge.from + '.relations', edge.pos);
           }
         }
-        
+
         if (param.nodes.length === 1 && component.get('removeVideoMode')) {
           if (confirm("Are you sure you want to remove the video \"" + modelData.videos[param.nodes[0]].prettyName + "\"?")) {
             let vidId = param.nodes[0];
             let edges = visData.get('edges');
-              
+
             edges.forEach(function(edge) {
               if (edge.from === vidId || edge.to === vidId) {
                 visData.removeEdge(edge);
               }
             });
-            
+
             visData.removeNode(vidId);
             component.get('removeVideoCallback') (vidId);
           }
-          
+
           component.set('removeVideoMode', false);
         }
-        
+
         if (param.nodes.length === 0) {
           component.setProperties({
             deleteVideoMode: false,
@@ -317,19 +395,19 @@ export default Ember.Component.extend({
       let fromVid = this.get('fromVid');
       let toVid = this.get('toVid');
       let relationsLength = this.get('relationsLength');
-      
+
       visData.createEdge(fromVid, toVid, diff, relationsLength, attr.prettyName, data.attributeId);
-      
+
       if (data.biDirectional) {
         visData.createEdge(toVid, fromVid, diff * -1, relationsLength + 1, attr.prettyName, data.attributeId);
-        
+
         this.get('modelService').update('modelData.videos.' + fromVid + '.relations', {
           relatedId: fromVid,
           attributeId: data.attributeId,
           diff: (diff * -1)
         });
       }
-        
+
       this.get('modelService').update('modelData.videos.' + fromVid + '.relations', {
         relatedId: toVid,
         attributeId: data.attributeId,
@@ -337,7 +415,7 @@ export default Ember.Component.extend({
       });
 
       this.get('videoSelectedCallback') (fromVid);
-      
+
       this.get('network').selectNodes([fromVid]);
 
       if (Ember.$('#addRelationOverlay')) {
@@ -346,21 +424,21 @@ export default Ember.Component.extend({
     },
     togglePhysics() {
       this.toggleProperty('usePhysics');
-      
+
       this.get('visData').set('options.physics.enabled', this.get('usePhysics'));
-      
+
       this.send('drawGraph');
     },
     setPhysics(solver) {
       this.get('visData').set('options.physics.solver', solver);
-      
+
       this.send('drawGraph');
     },
     saveModel() {
       this.get('saveModelCallback') ();
     },
     doNothing() {
-      
+
     }
   }
 });

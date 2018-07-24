@@ -4,9 +4,9 @@
  *
  * DESCRIPTION:
  *  Attribute panel that appears on the bottom of the screen
- * 
+ *
  * PARAMETERS:
- *  attributeDropCallback - Callback for when an attribute is dropped on the 
+ *  attributeDropCallback - Callback for when an attribute is dropped on the
  *    screen
  *  attributeExpandedCallback - Callback for when the attribute panel is
  *    collapsed or expanded
@@ -26,17 +26,17 @@ const { inject: { service } } = Ember;
 
 export default Ember.Component.extend({
   classNames: [ "attribute-panel" ],
+  classNameBindings: [ "expanded:attribute-panel-expand:attribute-panel-collapse" ],
   id: "attribute-panel",
 
-  panelStates: service(),
   modelService: service(),
-  
+
   /* Properties for the properties panel to know */
   prefix: "attributes",
   path: ".attributes",
   dragX: null,
   dragY: null,
-  
+
   didRender() {
     if (this.$('[data-toggle="attributeTooltip"]').length !== 0) {
       this.$('[data-toggle="attributeTooltip"]').tooltip({
@@ -69,16 +69,13 @@ export default Ember.Component.extend({
         dragY: null
       });
     },
-    toggleView() {
-      this.get('panelStates').toggleAttributesExpanded();
-    },
     scrollDiv(elId) {
       let container = this.$("#attribute-panel");
       let targetEl = this.$(elId);
       let titleBottom = Ember.$("#content-area--header").height() +
                       Ember.$("#content-area--header").offset().top +
                       parseInt(Ember.$("#content-area--header").css('paddingBottom'));
-      
+
       container.scrollTop(targetEl.offset().top - titleBottom);
     }
   }

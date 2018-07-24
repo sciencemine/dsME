@@ -1,6 +1,6 @@
 .model-edit-container {
     $attribute-panel-max-width: 10vw;
-    $properties-panel-max-width: 5vw;
+    $properties-panel-max-width: 10vw;
     $config-panel-max-height: 20vh;
 
     position: absolute;
@@ -11,7 +11,7 @@
     background-color: #aaa;
     display: grid;
     grid-template-columns: [attribute-panel] fit-content($attribute-panel-max-width) [attribute-tab] auto [center] 1fr [properties-tab] auto [properties-panel] fit-content($properties-panel-max-width);
-    grid-template-rows: [title] auto [center] 1fr [config-tab] auto [config-panel] max($config-panel-max-height);
+    grid-template-rows: [title] auto [center] 1fr [config-tab] auto [config-panel] fit-content($config-panel-max-height);
 
     .title {
         grid-column-start: center;
@@ -24,7 +24,7 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
-        
+
         .tab {
             background-color: #666;
             cursor: pointer;
@@ -50,13 +50,22 @@
         }
     }
 
+    .attribute-panel-collapse {
+        padding: 0em;
+        max-width: 0vw;
+    }
+
+    .attribute-panel-expand {
+        padding: 0.25em;
+    }
+
     .attribute-tab {
         @include tabular();
 
         grid-column-start: attribute-tab;
         grid-row-start: title;
         grid-row-end: config-tab;
-        
+
         .tab {
             width: 2vw;
             border-top-right-radius: 2vw;
@@ -70,6 +79,23 @@
         grid-row-start: title;
         grid-row-end: config-panel;
         background-color: lightcoral;
+
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+
+        & > * {
+            overflow-y: auto;
+        }
+    }
+
+    .properties-panel-collapse {
+        padding: 0em;
+        max-width: 0vw;
+    }
+
+    .properties-panel-expand {
+        padding: 0.25em;
     }
 
     .properties-tab {
@@ -78,7 +104,7 @@
         grid-column-start: properties-tab;
         grid-row-start: title;
         grid-row-end: config-tab;
-        
+
         .tab {
             width: 2vw;
             border-top-left-radius: 2vw;
@@ -99,7 +125,7 @@
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
 
-        padding: 0.25em;
+        overflow-y: hidden;
 
         & > * {
             overflow-y: auto;
@@ -108,7 +134,7 @@
         .config-panel-form {
             display: flex;
             flex-wrap: wrap;
-            
+
             & > * {
                 padding: 0.5em;
             }
@@ -119,17 +145,33 @@
         }
     }
 
+    .configuration-panel-collapse {
+        padding: 0em;
+        max-height: 0;
+    }
+
+    .configuration-panel-expand {
+        padding: 0.25em;
+    }
+
     .config-tab {
         @include tabular();
 
         grid-column-start: center;
         grid-row-start: config-tab;
-        
+
         .tab {
             width: 5vw;
             border-top-right-radius: 2vw;
             border-top-left-radius: 2vw;
             height: 2vh;
         }
+    }
+
+    .graph-visualizer {
+        grid-column-start: center;
+        grid-column-end: span 1;
+        grid-row-start: center;
+        grid-row-end: span 1;
     }
 }

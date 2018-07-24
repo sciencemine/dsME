@@ -2,10 +2,20 @@
 
 <div class="model-edit-container">
     <h1 class="title">Digital Signage Model Editor</h1>
-    {{attribute-panel data=(mut virtualModel)}}
-    <div class="attribute-tab"><div class="tab"></div></div>
-    <div class="properties-panel">Properties</div>
-    <div class="properties-tab"><div class="tab"></div></div>
-    <div class="config-tab"><div class="tab"></div></div>
-    {{configuration-panel data=(mut virtualModel)}}
+    {{attribute-panel expanded=attributePanelExpanded data=(mut virtualModel)}}
+    <div class="attribute-tab">
+        <div {{action 'attributeTabClick'}} class="tab"></div>
+    </div>
+    {{graph-visualizer panelChanged=panelChanged data=(mut virtualModel)}}
+    {{!-- needs to know what is currently selected --}}
+    {{properties-panel expanded=propertiesPanelExpanded data=(mut selectedCE)}}
+    <div class="properties-tab">
+        <div {{action 'propertiesTabClick'}} class="tab"></div>
+    </div>
+    <div class="config-tab">
+        <div {{action 'configurationTabClick'}} class="tab"></div>
+    </div>
+    {{configuration-panel expanded=configurationPanelExpanded
+            data=(mut virtualModel)
+    }}
 </div>

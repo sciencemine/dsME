@@ -1,4 +1,4 @@
-<h4 class="panel-title">{{modelService.modelConfig.config.displayName}}</h4>
+<h4 class="panel-title">{{data.title}} <small>{{data.description}}</small></h4>
 
 <form class="config-panel-form">
   <div>
@@ -14,7 +14,7 @@
     {{input id="modelAuthor" placeholder="Author" value=data.author}}
   </div>
   <div>
-    <label for="#idleTime">Time Btefore Going to Idle (seconds)</label>
+    <label for="#idleTime">Time Before Going to Idle (seconds)</label>
     {{input id="idleTime" required="required" placeholder="15" type="number" min=0 value=data.config.idle}}
   </div>
   <div>
