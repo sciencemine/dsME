@@ -3,9 +3,17 @@
   top: 0;
 }
 
+.vis-edit {
+  background-color: lightblue;
+  border-radius: 0.25em;
+  padding: 0.25em;
+}
+
 .vis-manipulation {
   position: absolute;
   top: 0;
+
+  @extend .vis-edit;
 }
 
 .vis-close {
@@ -18,4 +26,59 @@
   padding: 0.25em;
   background-color: lightblue;
   border-radius: 0.25em;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+
+  .modal-content {
+    max-width: 30vw;
+    background-color: #fefefe;
+    margin: 15vh auto;
+    border-radius: 0.5em;
+
+    .modal-title {
+      text-align: center;
+      border-bottom: 1px solid grey;
+    }
+
+    .modal-body {
+      padding: 0.25em;
+    }
+
+    .modal-close {
+      float: right;
+      margin: 0.25em;
+      cursor: pointer;
+    }
+  }
+}
+
+.grid {
+  display: grid;
+
+  label {
+    text-align: right;
+    margin-right: 0.5em;
+  }
+}
+
+.col-2 {
+  grid-template-columns: auto auto;
+
+  .left {
+    grid-column-start: 1;
+  }
+  .right {
+    grid-column-start: 2;
+  }
 }

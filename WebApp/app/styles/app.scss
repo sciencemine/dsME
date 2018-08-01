@@ -68,3 +68,20 @@
 body {
   margin: 0;
 }
+
+input {
+  border-radius: 0.25em;
+  border: 1px solid lightgrey;
+  padding: 0.25em;
+  margin: 0.15em;
+}
+
+input[type="reset"] {
+  background-color: skyblue * 0.95;
+  color: #eee;
+}
+
+input[type="submit"] {
+  background-color: green * 1.2;
+  color: #333;
+}

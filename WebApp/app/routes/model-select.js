@@ -1,17 +1,18 @@
 import Ember from 'ember';
+import ENV from 'dsME/config/environment';
 
 const { inject: { service } } = Ember;
+const { APP: { cdnAPI } } = ENV;
 
 export default Ember.Route.extend({
   modelService: service(),
   notify: service(),
-  cdnAPI: 'http://csdept26.mtech.edu:30123',
 
   model() {
-    return Ember.$.getJSON(`${this.cdnAPI}/dsm`)
+    return Ember.$.getJSON(`${cdnAPI}/dsm`)
     .then((data) => {
       return Ember.RSVP.Promise.all(data.map((dsm) => {
-        return Ember.$.getJSON(`${this.cdnAPI}/dsm/${dsm._id}`)
+        return Ember.$.getJSON(`${cdnAPI}/dsm/${dsm._id}`)
         .then((data) => {
           return data;
         })

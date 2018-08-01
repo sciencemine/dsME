@@ -1,7 +1,7 @@
 import Ember from 'ember';
+import ENV from 'dsME/config/environment';
 
 export default Ember.Controller.extend({
-    virtualModel: null,
     attributePanelExpanded: true,
     propertiesPanelExpanded: true,
     configurationPanelExpanded: true,
@@ -10,6 +10,9 @@ export default Ember.Controller.extend({
                 return true;
     }),
     selectedCE: null,
+    cesToAdd: null,
+    cesToUpdate: null,
+    virtualModel: null,
     actions: {
         attributeTabClick() {
             this.toggleProperty('attributePanelExpanded');
@@ -19,6 +22,15 @@ export default Ember.Controller.extend({
         },
         configurationTabClick() {
             this.toggleProperty('configurationPanelExpanded');
+        },
+        queueCEToAdd(ceObj, id) {
+            this.set(`cesToAdd.${id}`, ceObj);
+            let modelCE = {
+                id: id,
+                attributes: [ ], // empty by default
+                relationships: [ ] // empty by default
+            }
+            this.set(`virtualModel.ce_set.${id}`, modelCE);
         }
     }
 });

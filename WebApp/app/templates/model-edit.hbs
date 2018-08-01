@@ -9,7 +9,9 @@
     <div class="attribute-tab">
         <div {{action 'attributeTabClick'}} class="tab"></div>
     </div>
-    {{graph-visualizer panelChanged=panelChanged data=(mut virtualModel)}}
+    {{graph-visualizer panelChanged=panelChanged data=(mut virtualModel)
+        queueCEToAdd=(action 'queueCEToAdd')
+    }}
     {{!-- needs to know what is currently selected --}}
     {{properties-panel expanded=propertiesPanelExpanded data=(mut selectedCE)}}
     <div class="properties-tab">

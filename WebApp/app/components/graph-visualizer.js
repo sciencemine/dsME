@@ -42,18 +42,18 @@ export default Ember.Component.extend({
   videoAttributes: null,
   videoAttributesExpanded: true,
 
-  shortenName: function(name) {
+  shortenName(name) {
     return name.length > 15 ? name.substr(0, 11) + " ..." : name;
   },
 
-  createRGBcolor: function(diff) {
+  createRGBcolor(diff) {
     let red = diff > 0 ? 10 * diff : 0;
     let green = diff < 0 ? -10 * diff : 0;
     let blue = 127 - ((red + green) / 2);
 
     return "rgb(" + red + "," + green + "," + blue + ")";
   },
-  updateVideoAttributes: function() {
+  updateVideoAttributes() {
     let modelData = this.get('modelService.modelData');
     this.set('videoAttributes', [ ]);
 
@@ -76,12 +76,17 @@ export default Ember.Component.extend({
     for (let ceID in dsm.ce_set) {
       let ce = dsm.ce_set[ceID],
           ceData = ce.ce;
-
+          if (ceData === undefined) { console.log(ceID)}
       let node = {
         id: ceData._id,
-        title: `<b>${ceData.title}</b><br>${ceData.description}`,
-        label: this.shortenName(ceData.title)
+        title: `<b>${ceData.title}</b><br>
+            ${ceData.description}<br>`,
+        label: this.shortenName(ceData.title),
+        data: ceData
       };
+      if ('teaser' in ceData.playlist) {
+        node.title += `<img src="${ceData.playlist.teaser.url}">`
+      }
       nodes.add(node);
       let ceEdges = ce.relationships.map((relationship) => {
         let edge = {
@@ -99,15 +104,27 @@ export default Ember.Component.extend({
       edges: edges
     });
   },
+  // this is borked
   dataObserver: Ember.observer('data', function() {
-    this.updateNetwork();
+    console.log('daata')
   }),
+  didUpdateAttrs() {
+    this.updateNetwork();
+  },
   didInsertElement() {
-    let container = this.$()[0];
+    let graphVisualizer = this;
+    let container = this.$('.vis-network')[0];
     let options = {
       autoResize: false,
       manipulation: {
-        enabled: true
+        enabled: true,
+        addNode(node, callback) {
+          graphVisualizer.$('#addNode')[0].style.display = "block";
+          graphVisualizer.setProperties({
+            addNodeCallback: callback,
+            addNodeData: node
+          });
+        }
       },
       interaction: {
         hover: true
@@ -145,6 +162,7 @@ export default Ember.Component.extend({
       edges: this.get('edges')
     }
     let network = new vis.Network(container, data, options);
+    // update the events
     this.set('network', network);
   },
   didRender() {
@@ -157,25 +175,6 @@ export default Ember.Component.extend({
     // finally, fit the graph onto the screen
     network.fit();
   },
-  _didRender() {
-    if (this.get('network') === null) {
-      this.send('drawGraph');
-    }
-
-    let popovers = this.$('[data-toggle="popover"]');
-
-    if (popovers.length !== 0) {
-      popovers.popover({
-        trigger: 'hover focus',
-        placement: 'right auto',
-        delay: {
-          show: 750,
-          hide: 500
-        },
-        html: true
-      });
-    }
-  },
   addAttributeObserver: Ember.observer('addAttrToVideoData', function() {
     let addAttrData = this.get('addAttrToVideoData');
 
@@ -186,7 +185,48 @@ export default Ember.Component.extend({
       this.get('getVideoCallback') (network.getNodeAt(domPos), addAttrData.attributeId);
     }
   }),
+  makeCE(title = "", desc = null) {
+    let ce = {
+      title: title,
+      version: "0.0.0",
+      playlist: {
+        queue: [ ]
+      }
+    };
+    if (desc !== null && desc.trim() !== "") {
+      ce.description = desc;
+    }
+    return ce;
+  },
   actions: {
+    closeModal(id) {
+      let el = this.$(id)[0];
+      el.style.display = "none";
+    },
+    addNode(e) {
+      let node = this.get('addNodeData'),
+          graphId = node.id,
+          el = e.target,
+          title = el.querySelector('#ceTitle').value,
+          desc = el.querySelector('#ceDesc').value,
+          ce = this.makeCE(title, desc);
+
+      node.label = this.shortenName(ce.title);
+      node.title = `<b>${ce.title}</b><br>`;
+      if ('description' in ce) {
+        node.title += ce.description;
+      }
+      node.data = ce;
+
+      this.get('queueCEToAdd') (ce, graphId, (newId, oldId = graphId) => {
+        // no way to update a node to a new id so have to remove it and create
+        // a new one
+      });
+      this.get('addNodeCallback') (node);
+      this.$('#addNode')[0].style.display = "none";
+
+      return false;
+    },
     addEdgeMode() {
       this.get('network').addEdgeMode();
     },
@@ -410,3 +450,32 @@ export default Ember.Component.extend({
     }
   }
 });
+
+
+// let newPlaylist = {
+//   queue: [
+
+//   ]
+// };
+// function queueObj() {
+//   this.primary= "";
+//   this.backgrounds= [ ];
+//   this.tracks = [ ];
+//   this.overlays = [ ];
+// }
+// let playlistIndex = 0;
+// if (!Array.isArray(ce.playlist[0])) {
+//   newPlaylist.teaser = assetMap[ce.playlist[0]];
+//   playlistIndex = 1;
+// }
+// for (; playlistIndex < ce.playlist.length; playlistIndex++) {
+//   let queueObj = new queueObj(),
+//       oldQueueObj = ce.playlist[playlistIndex];// this is an array
+//   queueObj.primary = oldQueueObj[0];
+//   queueObj.backgrounds = oldQueueObj[1].map((asset) => {
+//     return {
+//       asset: assetMap[asset]
+//     }
+//   })
+// }
+// ce.playlist = newPlaylist;

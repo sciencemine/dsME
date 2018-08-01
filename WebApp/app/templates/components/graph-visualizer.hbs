@@ -141,7 +141,21 @@
 </div>
  --}}
 
-<div class="vis-network">
-  <canvas>
-  </canvas>
+<div class="vis-network"></div>
+
+<div id="addNode" class="modal">
+  <div class="modal-content">
+    <span {{action 'closeModal' '#addNode'}} class="modal-close">&#x2717;</span>
+    <h2 class="modal-title">Add CE</h2>
+    <form class="modal-body" onsubmit={{action 'addNode'}}>
+      <div class="grid col-2">
+        <label for="#ceTitle">Title</label>
+        {{input id="ceTitle" placeholder="CE Title" required="required"}}
+        <label for="#ceDesc">Description</label>
+        {{input id="ceDesc" placeholder="CE Description"}}
+        {{input type="reset" value="Reset"}}
+        {{input type="submit" value="Submit"}}
+      </div>
+    </form>
+  </div>
 </div>
