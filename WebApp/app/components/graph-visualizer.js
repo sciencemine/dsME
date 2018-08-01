@@ -124,6 +124,17 @@ export default Ember.Component.extend({
             addNodeCallback: callback,
             addNodeData: node
           });
+        },
+        deleteNode(obj, callback) {
+          let node = graphVisualizer.get('nodes').get(obj.nodes[0]);
+
+          if (confirm(`Are you sure you want to delete this ce?\nTitle: ${node.data.title}`)) {
+            callback(obj);
+            graphVisualizer.get('deleteCEFromModel')(node.id);
+          }
+          else {
+            callback();
+          }
         }
       },
       interaction: {

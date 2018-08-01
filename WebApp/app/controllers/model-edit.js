@@ -31,6 +31,10 @@ export default Ember.Controller.extend({
                 relationships: [ ] // empty by default
             }
             this.set(`virtualModel.ce_set.${id}`, modelCE);
+        },
+        deleteCEFromModel(id) {
+            delete this.get('virtualModel.ce_set')[id];
+            this.notifyPropertyChange('virtualModel');
         }
     }
 });
