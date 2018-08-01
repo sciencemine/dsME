@@ -159,3 +159,24 @@
     </form>
   </div>
 </div>
+
+<div id="addRelation" class="modal">
+  <div class="modal-content">
+    <span {{action 'closeModal' '#addRelation'}} class="modal-close">&#x2717;</span>
+    <h2 class="modal-title">Add Relationship</h2>
+    <form class="modal-body" onsubmit={{action 'addRelation'}}>
+      <div class="grid col-2">
+        <label for="#relationAttr">Related Attribute</label>
+        <select id="relationAttr">
+          {{#each data.attributes as |attr index|}}
+            <option value={{index}}>{{attr.title}}</option>
+          {{/each}}
+        </select>
+        <label for="#relationWeight">Relative Difficulty of This Relationship</label>
+        {{input id="relationWeight" type="number" value=0}}
+        {{input type="reset" value="Reset"}}
+        {{input type="submit" value="Submit"}}
+      </div>
+    </form>
+  </div>
+</div>

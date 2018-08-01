@@ -12,7 +12,7 @@ export default Ember.Route.extend({
   model(params) {
     return Ember.$.getJSON(`${cdnAPI}/dsm/${params.id}`)
     .then((data) => {
-      return Ember.RSVP.Promise.all(Object.keys(data.ce_set).map((ceID) => {
+      return Promise.all(Object.keys(data.ce_set).map((ceID) => {
         return Ember.$.getJSON(`${cdnAPI}/ce/${ceID}`)
         .then((ce) => {
           data.ce_set[ceID].ce = ce;

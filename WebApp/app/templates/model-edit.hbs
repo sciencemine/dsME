@@ -12,6 +12,8 @@
     {{graph-visualizer panelChanged=panelChanged data=(mut virtualModel)
         queueCEToAdd=(action 'queueCEToAdd')
         deleteCEFromModel=(action 'deleteCEFromModel')
+        deleteEdgeFromModel=(action 'deleteEdgeFromModel')
+        addRelationToModel=(action 'addRelationToModel')
     }}
     {{!-- needs to know what is currently selected --}}
     {{properties-panel expanded=propertiesPanelExpanded data=(mut selectedCE)}}

@@ -93,7 +93,8 @@ export default Ember.Component.extend({
           to: relationship.to,
           from: relationship.from,
           weight: relationship.weight,
-          label: dsm.attributes[relationship.attribute].title
+          label: dsm.attributes[relationship.attribute].title,
+          attrribute: relationship.attribute
         }
       });
       edges.add(ceEdges);
@@ -136,12 +137,24 @@ export default Ember.Component.extend({
             callback();
           }
         },
+        addEdge(edge, callback) {callback()
+          if (edge.from === edge.to) {
+            callback();
+          }
+          else {
+            graphVisualizer.$('#addRelation')[0].style.display = "block";
+            graphVisualizer.setProperties({
+              addRelationCallback: callback,
+              addRelationData: edge
+            });
+          }
+        },
         deleteEdge(obj, callback) {
           let edge = graphVisualizer.get('edges').get(obj.edges[0]);
 
-          if (confirm(`Are you sure you want to delete this ce?\nTitle: ${edge.label}`)) {
+          if (confirm(`Are you sure you want to delete this edge?`)) {
             callback(obj);
-            graphVisualizer.get('deleteEdgeFromModel')(edge.from, edge.to);
+            graphVisualizer.get('deleteEdgeFromModel')(edge);
           }
           else {
             callback();
@@ -240,13 +253,26 @@ export default Ember.Component.extend({
       }
       node.data = ce;
 
-      this.get('queueCEToAdd') (ce, graphId, (newId, oldId = graphId) => {
-        // no way to update a node to a new id so have to remove it and create
-        // a new one
-      });
+      this.get('queueCEToAdd') (ce, graphId);
       this.get('addNodeCallback') (node);
       this.$('#addNode')[0].style.display = "none";
 
+      return false;
+    },
+    addRelation(e) {
+      let edge = this.get('addRelationData'),
+          el = e.target,
+          weight = el.querySelector('#relationWeight').value,
+          attr = el.querySelector('#relationAttr').value,
+          dsm = this.get('data');
+
+      edge.weight = weight;
+      edge.attribute = dsm[attr];
+      edge.label = dsm.attributes[attr].title;
+
+      this.get('addRelationCallback') (edge);
+      this.get('addRelationToModel') (edge);
+      this.$('#addRelation')[0].style.display = "none";
       return false;
     },
     addEdgeMode() {
@@ -472,32 +498,3 @@ export default Ember.Component.extend({
     }
   }
 });
-
-
-// let newPlaylist = {
-//   queue: [
-
-//   ]
-// };
-// function queueObj() {
-//   this.primary= "";
-//   this.backgrounds= [ ];
-//   this.tracks = [ ];
-//   this.overlays = [ ];
-// }
-// let playlistIndex = 0;
-// if (!Array.isArray(ce.playlist[0])) {
-//   newPlaylist.teaser = assetMap[ce.playlist[0]];
-//   playlistIndex = 1;
-// }
-// for (; playlistIndex < ce.playlist.length; playlistIndex++) {
-//   let queueObj = new queueObj(),
-//       oldQueueObj = ce.playlist[playlistIndex];// this is an array
-//   queueObj.primary = oldQueueObj[0];
-//   queueObj.backgrounds = oldQueueObj[1].map((asset) => {
-//     return {
-//       asset: assetMap[asset]
-//     }
-//   })
-// }
-// ce.playlist = newPlaylist;

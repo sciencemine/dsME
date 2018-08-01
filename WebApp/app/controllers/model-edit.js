@@ -46,8 +46,18 @@ export default Ember.Controller.extend({
             }
             this.notifyPropertyChange('virtualModel');
         },
-        deleteEdgeFromModel(fromCE, toCE) {
-
+        deleteEdgeFromModel(edge) {
+            let fromCE = this.get(`virtualModel.ce_set.${edge.from}`);
+            // need to delete the relationship from the given ce's relationships
+            let newRelationships = fromCE.relationships.filter((rel) => {
+                return (rel.to !== edge.to) || (rel.attribute !== edge.attribute);
+            });
+            this.set(`virtualModel.ce_set.${edge.from}.relationships`, newRelationships);
+        },
+        addRelationToModel(relObj) {
+            delete relObj.id;
+            this.get(`virtualModel.ce_set.${relObj.from}.relationships`).pushObject(relObj);
+            // need to flag the dsm as changed
         }
     }
 });

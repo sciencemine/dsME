@@ -69,11 +69,19 @@ body {
   margin: 0;
 }
 
-input {
+@mixin input-style() {
   border-radius: 0.25em;
   border: 1px solid lightgrey;
   padding: 0.25em;
   margin: 0.15em;
+}
+
+input {
+  @include input-style();
+}
+
+select {
+  @include input-style();
 }
 
 input[type="reset"] {
