@@ -135,6 +135,17 @@ export default Ember.Component.extend({
           else {
             callback();
           }
+        },
+        deleteEdge(obj, callback) {
+          let edge = graphVisualizer.get('edges').get(obj.edges[0]);
+
+          if (confirm(`Are you sure you want to delete this ce?\nTitle: ${edge.label}`)) {
+            callback(obj);
+            graphVisualizer.get('deleteEdgeFromModel')(edge.from, edge.to);
+          }
+          else {
+            callback();
+          }
         }
       },
       interaction: {

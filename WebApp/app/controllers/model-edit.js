@@ -34,7 +34,20 @@ export default Ember.Controller.extend({
         },
         deleteCEFromModel(id) {
             delete this.get('virtualModel.ce_set')[id];
+            let ceSet = this.get('virtualModel.ce_set');
+            // remove all the ces that have relations to this node
+            for (let ceID in ceSet) {
+                let ce = ceSet[ceID];
+                let relationships = ce.relationships.map((rel) => {
+                        return rel.to === ceID ? null : rel;
+                });
+                console.log(relationships)
+                this.set(`virtualModel.ce_set.${ceID}.relationships`, relationships);
+            }
             this.notifyPropertyChange('virtualModel');
+        },
+        deleteEdgeFromModel(fromCE, toCE) {
+
         }
     }
 });
